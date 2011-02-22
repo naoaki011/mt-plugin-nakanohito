@@ -1,16 +1,14 @@
 <mtapp:widget
 	class="widget hw-widget"
-	label="nakanohito"
+	label="<MT_TRANS phrase='nakanohito footprint'>"
 	can_close="1">
 
-<p>
-There are  recent <mt:var name="nakanohito_num"> visitors' footprints.
-</p>
-
+    <mt:if name="nakanohito_num">
+    <p><MT_TRANS phrase='There are  recent [_1] visitors footprints.' params='<mt:var name="nakanohito_num">'></p>
+    </mt:if>
 	<mt:if name="error">
 	<p><mtvar name="error"></p>
 	</mt:if>
-
 	<mt:if name="footprint">
 		<table cellpadding="0" margin="0">
 		<mt:loop name="footprint">
@@ -19,9 +17,6 @@ There are  recent <mt:var name="nakanohito_num"> visitors' footprints.
 		</mt:loop>
 		</table>
 	</mt:if>
-
-<p align="right">
-Powered by <a href="http://nakanohito.jp/stage/login_form/" target="blank">nakanohito</a>
-</p>
+    <p align="right">Powered by <a href="http://nakanohito.jp/stage/login_form/" target="blank"><MT_TRANS phrase='nakanohito'></a></p>
 
 </mtapp:widget>

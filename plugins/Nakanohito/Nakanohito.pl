@@ -1,4 +1,4 @@
-package MT::Plugin::nakanohito;
+package MT::Plugin::Nakanohito;
 
 use strict;
 use MT;
@@ -12,14 +12,15 @@ use vars qw($VERSION @ISA);#グローバル変数を定義している
 @ISA = qw(MT::Plugin);#@ISAはpackage継承するクラスを指定するために使用される
 $VERSION = "0.1";
 
-my $plugin = new MT::Plugin::nakanohito({
-	name => 'nakanohito',
+my $plugin = new MT::Plugin::Nakanohito({
+	name => 'Nakanohito',
 	version => $VERSION,
-	description => "login to nakanohito and get footprint and show.",
-	author_name => 'Shinichi Nozawa',
-	author_link => 'http://http://www.nozawashinichi.sakura.ne.jp/fs/',
+	description => "<MT_TRANS phrase='login to nakanohito and get footprint and show dashboard widget.'>",
+	author_name => "<MT_TRANS phrase='Shinichi Nozawa'>",
+	author_link => 'http://nozawashinichi.sakura.ne.jp/fs/',
 	doc_link => 'http://www.nozawashinichi.sakura.ne.jp/usingmt/2008/08/mt-widget-nakanohito.html',
 	blog_config_template => 'nakanohito_config.tmpl',
+    l10n_class => 'Nakanohito::L10N',
 	settings => new MT::PluginSettings([
 		['nakanohito_id', { Default => undef, Scope => 'blog'}],
 		['nakanohito_pw', { Default => undef, Scope => 'blog'}],
@@ -35,7 +36,7 @@ sub init_registry {
     $plugin->registry({
         widgets => {
             nakanohito => {
-                label    => 'nakanohito',
+                label    => 'Nakanohito',
                 plugin   => $plugin,
                 template => 'nakanohito_view.tmpl',
 #                set => 'sidebar',
@@ -57,7 +58,7 @@ sub _widget_handler {
 	my $pw = $plugin->get_config_value('nakanohito_pw', $blog_id);
 
 	if(!$id || !$pw){
-		$param->{error} = "ID or Password undefined";
+		$param->{error} = "<MT_TRANS phrase='ID or Password undefined'>";
 		return 1; 
 	}
 	
@@ -77,7 +78,7 @@ sub _widget_handler {
 	my $footprint = "http://nakanohito.jp/stage/my_footprint";
 	$response = $agent->request(GET($footprint));
 	if(!$response){
-		$param->{error} = "Can't access to nakanohito. Please check id and pass";
+		$param->{error} = "<MT_TRANS phrase='Can\'t access to nakanohito. Please check id and pass'>";
 		$param->{nakanohito_num} = 0;
 		return 1; 
 	}
@@ -85,7 +86,7 @@ sub _widget_handler {
 	#Form the data 
 	my @data = split("table", $response->as_string);
 	if(!$data[1]){
-		$param->{error} = "There has been no foot print yet.";
+		$param->{error} = "<MT_TRANS phrase='There has been no foot print yet.'>";
 		$param->{nakanohito_num} = 0;
 		return 1; 
 	}
