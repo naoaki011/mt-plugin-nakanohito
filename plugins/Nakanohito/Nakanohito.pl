@@ -6,11 +6,12 @@ use MT;
 use LWP::UserAgent;
 use HTTP::Request::Common;
 use HTTP::Cookies;
+use Encode;
 
 use vars qw($VERSION @ISA);#グローバル変数を定義している
 
 @ISA = qw(MT::Plugin);#@ISAはpackage継承するクラスを指定するために使用される
-$VERSION = "0.1";
+$VERSION = "0.2";
 
 my $plugin = new MT::Plugin::Nakanohito({
 	name => 'Nakanohito',
@@ -39,7 +40,8 @@ sub init_registry {
                 label    => 'Nakanohito',
                 plugin   => $plugin,
                 template => 'nakanohito_view.tmpl',
-#                set => 'sidebar',
+                set => 'sidebar',
+                condition => sub { $_[1] =~ /blog:\d+$/; },
                 singular => 1,
                 handler => \&_widget_handler,
             },
@@ -89,6 +91,9 @@ sub _widget_handler {
 		$param->{error} = "<MT_TRANS phrase='There has been no foot print yet.'>";
 		$param->{nakanohito_num} = 0;
 		return 1; 
+	}
+	if ( MT->version_number ge '5.0' ) {
+		$data[1] = Encode::decode_utf8($data[1]) unless utf8::is_utf8($data[1]);
 	}
 	$data[1] = "<".$data[1].">";
 	my @lines = split("<tr", $data[1]);
